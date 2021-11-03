@@ -1,35 +1,54 @@
 import React, {useState, useEffect} from 'react';
 import styles from './App.module.css';
 
-import useDoubleClick from './hook/useDoubleClick';
+import Display from "./components/Display/Display";
 
 const App = () => {
     const [time, setTime] = useState(0);
     const [timerOn, setTimerOn] = useState(false);
     const [wait, setWait] = useState(false);
+    const [firstClick, setFirstClick] = useState(null);
 
-    const [refCallback, elem] = useDoubleClick(handleWait);
-
-    function handleWait() {
+    const callbackForWaitBtn = () => {
+        console.log('Do something!');
         if (time > 0) {
+            setWait(true);
             setTimerOn(false);
         }
-    }
+    };
+
+    const clickHandler = () => {
+        if (firstClick) {
+            const secondClick = Date.now();
+            const timeInterval = secondClick - firstClick; // for test
+            if (secondClick - firstClick < 300) {
+                setFirstClick(null);
+                callbackForWaitBtn();
+                console.log('interval => ', timeInterval); // for test
+                return;
+            } else {
+                console.log('interval => ', timeInterval); // for test
+                setFirstClick(null);
+                return;
+            }
+        }
+        setFirstClick(Date.now());
+    };
 
     useEffect(() => {
         let intervalId = null;
-
+        console.log("on top useEffect:  ", timerOn, " ", wait);
         if (timerOn) {
+            console.log("start");
             intervalId = setInterval(() => {
                 setTime(prevTime => prevTime + 10);
             }, 10);
-            if (wait) {
-                setWait(false);
-            }
         } else if (!timerOn && wait) {
+            console.log("wait")
             clearInterval(intervalId);
             setWait(false);
         } else if (!timerOn) {
+            console.log("stop");
             setTime(0);
             clearInterval(intervalId);
         }
@@ -41,9 +60,7 @@ const App = () => {
     return (
         <div className={styles.container}>
             <div>
-                <span>{("0" + Math.floor(time / 60000) % 60).slice(-2)} : </span>
-                <span>{("0" + Math.floor(time / 1000) % 60).slice(-2)} : </span>
-                <span>{("0" + (time / 10) % 100).slice(-2)}</span>
+                <Display time={time}/>
             </div>
             <div>
                 {!timerOn && (
@@ -52,7 +69,7 @@ const App = () => {
                 {timerOn && (
                     <button onClick={() => setTimerOn(false)}>Stop</button>
                 )}
-                <button ref={refCallback} onClick={()=> setWait(true)}>Wait</button>
+                <button onClick={clickHandler}>Wait</button>
                 <button onClick={() => setTime(0)}>Reset</button>
             </div>
         </div>
