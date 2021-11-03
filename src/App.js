@@ -6,6 +6,26 @@ const App = () => {
     const [timerOn, setTimerOn] = useState(false);
     const [wait, setWait] = useState(false);
 
+    useEffect(()=>{
+        let intervalId = null;
+
+        if (timerOn) {
+            intervalId = setInterval(()=> {
+                setTime(prevState => prevState + 10);
+            }, 10);
+            if (wait) {
+                setWait(false);
+            }
+        }  else if (!timerOn && wait) {
+            clearTimeout(intervalId);
+            setWait(false);
+        } else if (!timerOn) {
+            setTime(0);
+            clearTimeout(intervalId);
+        }
+
+        return ()=>clearTimeout(intervalId);
+    },  [timerOn]);
 
     return (
         <div className={styles.container}>
