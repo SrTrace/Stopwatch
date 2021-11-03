@@ -1,10 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import styles from './App.module.css';
 
+import useDoubleClick from './hook/useDoubleClick';
+
 const App = () => {
     const [time, setTime] = useState(0);
     const [timerOn, setTimerOn] = useState(false);
     const [wait, setWait] = useState(false);
+    const [refCallback, elem] = useDoubleClick(handleWait);
 
     useEffect(()=>{
         let intervalId = null;
