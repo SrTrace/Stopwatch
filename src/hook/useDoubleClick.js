@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 
 function UseDoubleClick(callback) {
     const [elem, setElem] = useState(null);

@@ -7,28 +7,36 @@ const App = () => {
     const [time, setTime] = useState(0);
     const [timerOn, setTimerOn] = useState(false);
     const [wait, setWait] = useState(false);
+
     const [refCallback, elem] = useDoubleClick(handleWait);
 
-    useEffect(()=>{
+    function handleWait() {
+        if (time > 0) {
+            setTimerOn(false);
+        }
+    }
+
+    useEffect(() => {
         let intervalId = null;
 
         if (timerOn) {
-            intervalId = setInterval(()=> {
-                setTime(prevState => prevState + 10);
+            intervalId = setInterval(() => {
+                setTime(prevTime => prevTime + 10);
             }, 10);
             if (wait) {
                 setWait(false);
             }
-        }  else if (!timerOn && wait) {
-            clearTimeout(intervalId);
+        } else if (!timerOn && wait) {
+            clearInterval(intervalId);
             setWait(false);
         } else if (!timerOn) {
             setTime(0);
-            clearTimeout(intervalId);
+            clearInterval(intervalId);
         }
 
-        return ()=>clearTimeout(intervalId);
-    },  [timerOn]);
+        return () => clearInterval(intervalId);
+
+    }, [timerOn]);
 
     return (
         <div className={styles.container}>
@@ -44,10 +52,9 @@ const App = () => {
                 {timerOn && (
                     <button onClick={() => setTimerOn(false)}>Stop</button>
                 )}
-                <button  onClick={()=> setWait(true)}>Wait</button>
+                <button ref={refCallback} onClick={()=> setWait(true)}>Wait</button>
                 <button onClick={() => setTime(0)}>Reset</button>
             </div>
-
         </div>
     );
 };
