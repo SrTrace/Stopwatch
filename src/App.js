@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import styles from './App.module.css';
 
 import Display from "./components/Display/Display";
+import Buttons from "./components/Buttons/Buttons";
 
 const App = () => {
     const [time, setTime] = useState(0);
@@ -10,7 +11,7 @@ const App = () => {
     const [firstClick, setFirstClick] = useState(null);
 
     const callbackForWaitBtn = () => {
-        console.log('Do something!');
+        console.log('Stop counting!');
         if (time > 0) {
             setWait(true);
             setTimerOn(false);
@@ -37,18 +38,15 @@ const App = () => {
 
     useEffect(() => {
         let intervalId = null;
-        console.log("on top useEffect:  ", timerOn, " ", wait);
+
         if (timerOn) {
-            console.log("start");
             intervalId = setInterval(() => {
                 setTime(prevTime => prevTime + 10);
             }, 10);
         } else if (!timerOn && wait) {
-            console.log("wait")
             clearInterval(intervalId);
             setWait(false);
         } else if (!timerOn) {
-            console.log("stop");
             setTime(0);
             clearInterval(intervalId);
         }
@@ -64,13 +62,13 @@ const App = () => {
             </div>
             <div>
                 {!timerOn && (
-                    <button onClick={() => setTimerOn(true)}>Start</button>
+                    <Buttons onClick={() => setTimerOn(true)}>Start</Buttons>
                 )}
                 {timerOn && (
-                    <button onClick={() => setTimerOn(false)}>Stop</button>
+                    <Buttons onClick={() => setTimerOn(false)}>Stop</Buttons>
                 )}
-                <button onClick={clickHandler}>Wait</button>
-                <button onClick={() => setTime(0)}>Reset</button>
+                <Buttons onClick={clickHandler}>Wait</Buttons>
+                <Buttons onClick={() => setTime(0)}>Reset</Buttons>
             </div>
         </div>
     );

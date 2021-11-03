@@ -1,11 +1,10 @@
 import React from 'react';
-import {Card, CardContent, Typography, Grid} from "@material-ui/core";
 
 import styles from './Display.module.css';
-import Paper from "@material-ui/core/Paper";
+
 
 const Display = ({time}) => {
-    console.log(time);
+
     return (
         <div className={styles.container}>
             <div className="min">
